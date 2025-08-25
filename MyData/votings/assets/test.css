@@ -1,0 +1,27 @@
+/* Test CSS - Kiểm tra đường dẫn */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.test-element {
+    background: red !important;
+    color: white !important;
+    padding: 20px !important;
+    margin: 20px !important;
+    border: 3px solid yellow !important;
+    border-radius: 10px !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+}
+
+/* Test animation */
+@keyframes test-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.test-animation {
+    animation: test-bounce 1s infinite;
+}

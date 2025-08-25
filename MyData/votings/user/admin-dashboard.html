@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BVOTE - Hệ thống Bình chọn</title>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu a:hover {
+            color: #3b82f6;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Featured Campaigns Section */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #9ca3af;
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+        }
+
+        /* Campaign Grid */
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .campaign-card {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .campaign-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .campaign-image.giong-hat {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .campaign-image.tai-nang {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        }
+
+        .campaign-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" patternUnits="userSpaceOnUse" width="10" height="10"><circle cx="5" cy="5" r="1" fill="white" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+        }
+
+        .campaign-content {
+            padding: 1.5rem;
+        }
+
+        .campaign-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-description {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .vote-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .vote-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+
+        /* Voting Section */
+        .voting-section {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .voting-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .voting-subtitle {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            position: relative;
+        }
+
+        .social-btn.facebook { background: #1877f2; }
+        .social-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-btn.google { background: #ea4335; }
+        .social-btn.zalo { background: #0068ff; }
+        .social-btn.microsoft { background: #00a1f1; }
+        .social-btn.yahoo { background: #720e9e; }
+        .social-btn.apple { background: #000000; }
+
+        .social-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .zalo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Top Contestants */
+        .contestants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .contestant-card {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .contestant-card:hover {
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .contestant-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contestant-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .contestant-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .contestant-votes {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #ffffff;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(55, 65, 81, 0.5);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-button {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .form-button:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+
+        .form-links a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-links a:hover {
+            text-decoration: underline;
+            color: #60a5fa;
+        }
+
+        .divider-text {
+            color: #9ca3af;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .campaigns-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .contestants-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .social-login {
+                gap: 0.8rem;
+            }
+
+            .social-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .voting-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Stats Counter Animation */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stat-number {
+            animation: countUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">BVOTE</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#home"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                    <li><a href="#campaigns"><i class="fas fa-trophy"></i> Đăng Ký Hàng</a></li>
+                    <li><a href="../admin/"><i class="fas fa-cog"></i> Admin</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="#" class="login-btn" onclick="openLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section fade-in" id="home">
+                <h1 class="hero-title">Cuộc Thi Nổi Bật</h1>
+                <p class="hero-subtitle">Khám phá các cuộc thi đang diễn ra và tham gia bình chọn cho thí sinh bạn yêu thích.</p>
+            </section>
+
+            <!-- Featured Campaigns -->
+            <section class="section" id="campaigns">
+                <div class="campaigns-grid">
+                    <div class="campaign-card" onclick="openVoteModal('hoa-hau-viet-nam-2024')">
+                        <div class="campaign-image">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="campaign-content">
+                            <h3 class="campaign-title">Hoa Hậu Việt Nam 2024</h3>
+                            <p class="campaign-description">Cuộc thi sắc đẹp lâu năm</p>
+                            <div class="campaign-stats">
+                                <span class="stat-item"><i class="fas fa-heart"></i> <span class="stat-number">43.2k</span> lượt bình chọn</span>
+                                <span class="stat-item"><i class="fas fa-users"></i> <span class="stat-number">234</span> thí sinh</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-vote-yea"></i> Bình chọn ngay
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="campaign-card" onclick="openVoteModal('giong-hat-vang-2024')">
+                        <div class="campaign-image giong-hat">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="campaign-content">
+                            <h3 class="campaign-title">Giọng Hát Vàng 2024</h3>
+                            <p class="campaign-description">Tìm kiếm những giọng ca tài năng</p>
+                            <div class="campaign-stats">
+                                <span class="stat-item"><i class="fas fa-heart"></i> <span class="stat-number">28.1k</span> lượt bình chọn</span>
+                                <span class="stat-item"><i class="fas fa-users"></i> <span class="stat-number">156</span> thí sinh</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-vote-yea"></i> Bình chọn ngay
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="campaign-card" onclick="openVoteModal('tai-nang-tre')">
+                        <div class="campaign-image tai-nang">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="campaign-content">
+                            <h3 class="campaign-title">Tài Năng Trẻ</h3>
+                            <p class="campaign-description">Sân chơi dành cho tài năng trẻ</p>
+                            <div class="campaign-stats">
+                                <span class="stat-item"><i class="fas fa-heart"></i> <span class="stat-number">15.7k</span> lượt bình chọn</span>
+                                <span class="stat-item"><i class="fas fa-users"></i> <span class="stat-number">89</span> thí sinh</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-vote-yea"></i> Bình chọn ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Voting Section -->
+            <section class="voting-section fade-in">
+                <h2 class="voting-title">Bắt Đầu Bình Chọn</h2>
+                <p class="voting-subtitle">Hãy dùng tài khoản của bạn để ứng hộ cho thí sinh bạn yêu thích nhất!</p>
+
+                <div class="social-login">
+                    <button class="social-btn facebook" onclick="socialLogin('facebook')" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="social-btn instagram" onclick="socialLogin('instagram')" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </button>
+                    <button class="social-btn google" onclick="socialLogin('google')" title="Google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="social-btn zalo" onclick="socialLogin('zalo')" title="Zalo">
+                        <span class="zalo-text">Z</span>
+                    </button>
+                    <button class="social-btn microsoft" onclick="socialLogin('microsoft')" title="Microsoft">
+                        <i class="fab fa-microsoft"></i>
+                    </button>
+                    <button class="social-btn yahoo" onclick="socialLogin('yahoo')" title="Yahoo">
+                        <i class="fab fa-yahoo"></i>
+                    </button>
+                    <button class="social-btn apple" onclick="socialLogin('apple')" title="Apple">
+                        <i class="fab fa-apple"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Top Contestants -->
+            <section class="section">
+                <h2 class="section-title">Thí Sinh Hàng Đầu</h2>
+                <p class="section-subtitle">Những thí sinh xuất sắc đang dẫn đầu các cuộc bình chọn hàng đầu</p>
+
+                <div class="contestants-grid">
+                    <div class="contestant-card">
+                        <div class="contestant-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="contestant-name">Vũ Thị Hoa</h3>
+                        <div class="contestant-votes">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number">1.540</span> lượt bình chọn
+                        </div>
+                    </div>
+
+                    <div class="contestant-card">
+                        <div class="contestant-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="contestant-name">Nguyễn Thị Hương</h3>
+                        <div class="contestant-votes">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number">1.250</span> lượt bình chọn
+                        </div>
+                    </div>
+
+                    <div class="contestant-card">
+                        <div class="contestant-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="contestant-name">Lê Thị Mai</h3>
+                        <div class="contestant-votes">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number">1.100</span> lượt bình chọn
+                        </div>
+                    </div>
+
+                    <div class="contestant-card">
+                        <div class="contestant-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="contestant-name">Trần Minh Anh</h3>
+                        <div class="contestant-votes">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number">980</span> lượt bình chọn
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+            <h2 class="modal-title">BVOTE</h2>
+            <p class="modal-subtitle">Hãy dùng tài khoản của bạn để ứng hộ cho thí sinh bạn yêu thích nhất!</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Email hoặc số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Mật khẩu" required>
+                </div>
+                <button type="submit" class="form-button">Đăng Nhập</button>
+            </form>
+
+            <div class="form-links">
+                <a href="#" onclick="showForgotPassword()">Quên mật khẩu?</a>
+                <a href="#" onclick="showRegister()">Chưa có tài khoản? Đăng ký</a>
+            </div>
+
+            <p class="divider-text">hoặc</p>
+
+            <div class="social-login">
+                <button class="social-btn facebook" onclick="socialLogin('facebook')" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="social-btn instagram" onclick="socialLogin('instagram')" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </button>
+                <button class="social-btn google" onclick="socialLogin('google')" title="Google">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button class="social-btn zalo" onclick="socialLogin('zalo')" title="Zalo">
+                    <span class="zalo-text">Z</span>
+                </button>
+                <button class="social-btn microsoft" onclick="socialLogin('microsoft')" title="Microsoft">
+                    <i class="fab fa-microsoft"></i>
+                </button>
+                <button class="social-btn yahoo" onclick="socialLogin('yahoo')" title="Yahoo">
+                    <i class="fab fa-yahoo"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login Modal Functions
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function showForgotPassword() {
+            alert('Tính năng quên mật khẩu sẽ được triển khai sau!');
+        }
+
+        function showRegister() {
+            alert('Tính năng đăng ký sẽ được triển khai sau!');
+        }
+
+        // Social Login Functions
+        function socialLogin(platform) {
+            // Show loading state
+            const platformNames = {
+                'facebook': 'Facebook',
+                'instagram': 'Instagram',
+                'google': 'Google',
+                'zalo': 'Zalo',
+                'microsoft': 'Microsoft',
+                'yahoo': 'Yahoo',
+                'apple': 'Apple'
+            };
+
+            alert(`Đăng nhập với ${platformNames[platform]} - Tính năng sẽ được triển khai sau!`);
+            // Here you would integrate with actual social login APIs
+        }
+
+        // Campaign Functions
+        function openVoteModal(campaignId) {
+            const campaignNames = {
+                'hoa-hau-viet-nam-2024': 'Hoa Hậu Việt Nam 2024',
+                'giong-hat-vang-2024': 'Giọng Hát Vàng 2024',
+                'tai-nang-tre': 'Tài Năng Trẻ'
+            };
+
+            alert(`Mở cuộc thi: ${campaignNames[campaignId]} - Tính năng sẽ được triển khai sau!`);
+            // Here you would open the specific campaign voting interface
+        }
+
+        // Navigation Functions
+        function showSection(section) {
+            // Handle navigation between sections
+            console.log(`Navigating to: ${section}`);
+
+            // Smooth scroll to section
+            const targetSection = document.getElementById(section);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Form Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Đăng nhập thành công! (Demo)');
+            closeLoginModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        // Smooth scroll and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to elements
+            const elements = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            });
+
+            elements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // Animate numbers
+            animateNumbers();
+        });
+
+        // Number animation
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(number => {
+                const finalNumber = number.textContent;
+                let currentNumber = 0;
+                const increment = parseInt(finalNumber.replace(/[^\d]/g, '')) / 50;
+
+                const timer = setInterval(() => {
+                    currentNumber += increment;
+                    if (currentNumber >= parseInt(finalNumber.replace(/[^\d]/g, ''))) {
+                        clearInterval(timer);
+                        number.textContent = finalNumber;
+                    } else {
+                        number.textContent = Math.floor(currentNumber).toLocaleString() + (finalNumber.includes('k') ? 'k' : '');
+                    }
+                }, 50);
+            });
+        }
+
+        // API Integration Functions (to be implemented)
+        async function loadCampaigns() {
+            try {
+                const response = await fetch('../api/v1/public/campaigns');
+                const campaigns = await response.json();
+                // Update campaign grid with real data
+                updateCampaignGrid(campaigns);
+            } catch (error) {
+                console.error('Error loading campaigns:', error);
+            }
+        }
+
+        async function loadTopContestants() {
+            try {
+                const response = await fetch('../api/v1/public/contestants/top');
+                const contestants = await response.json();
+                // Update contestants grid with real data
+                updateContestantsGrid(contestants);
+            } catch (error) {
+                console.error('Error loading contestants:', error);
+            }
+        }
+
+        function updateCampaignGrid(campaigns) {
+            // Implementation for updating campaign grid with real data
+            console.log('Updating campaigns:', campaigns);
+        }
+
+        function updateContestantsGrid(contestants) {
+            // Implementation for updating contestants grid with real data
+            console.log('Updating contestants:', contestants);
+        }
+
+        // Initialize page
+        // Uncomment these when API endpoints are ready
+        // loadCampaigns();
+        // loadTopContestants();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Press Escape to close modal
+            if (e.key === 'Escape' && document.getElementById('loginModal').classList.contains('active')) {
+                closeLoginModal();
+            }
+
+            // Press Enter to open login modal when focused on login button
+            if (e.key === 'Enter' && document.activeElement.classList.contains('login-btn')) {
+                openLoginModal();
+            }
+        });
+    </script>
+</body>
+</html>

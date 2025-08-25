@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BVOTE - Hệ Thống Bình Chọn Thông Minh</title>
+    <meta name="description" content="BVOTE - Hệ thống bình chọn và quản lý cuộc thi trực tuyến với tính năng auto login hiện đại">
+    <meta name="keywords" content="bình chọn, cuộc thi, auto login, voting system, BVOTE">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .feature-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-indigo-600">BVOTE</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Tính năng</a>
+                    <a href="#about" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Giới thiệu</a>
+                    <a href="#contact" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Liên hệ</a>
+                    <a href="admin/login" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300">Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white pt-20 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-8">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    BVOTE
+                    <span class="block text-3xl md:text-4xl font-light mt-2">Hệ Thống Bình Chọn Thông Minh</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                    Giải pháp bình chọn và quản lý cuộc thi trực tuyến với tính năng auto login hiện đại,
+                    giao diện thân thiện và bảo mật cao.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#features" class="bg-white text-indigo-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition duration-300">
+                        <i class="fas fa-rocket mr-2"></i>Khám phá ngay
+                    </a>
+                    <a href="admin/login" class="border-2 border-white text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
+                        <i class="fas fa-user-shield mr-2"></i>Admin Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Tính Năng Nổi Bật</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    BVOTE cung cấp đầy đủ các tính năng cần thiết cho một hệ thống bình chọn chuyên nghiệp
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Auto Login Feature -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-magic text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Auto Login System</h3>
+                    <p class="text-gray-600 mb-4">
+                        Hệ thống đăng nhập tự động với OTP, hỗ trợ 8 nền tảng mạng xã hội phổ biến.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Facebook, Google, Instagram</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Zalo, Yahoo, Microsoft</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Email và các nền tảng khác</li>
+                    </ul>
+                </div>
+
+                <!-- Real-time Dashboard -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-3xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Real-time Dashboard</h3>
+                    <p class="text-gray-600 mb-4">
+                        Bảng điều khiển thời gian thực với thống kê chi tiết và cập nhật liên tục.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Thống kê bình chọn real-time</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Quản lý cuộc thi trực tuyến</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Báo cáo chi tiết</li>
+                    </ul>
+                </div>
+
+                <!-- Enhanced UI/UX -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-palette text-3xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Enhanced UI/UX</h3>
+                    <p class="text-gray-600 mb-4">
+                        Giao diện người dùng hiện đại với Tailwind CSS, responsive và thân thiện.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Thiết kế responsive</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Giao diện hiện đại</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Trải nghiệm người dùng tốt</li>
+                    </ul>
+                </div>
+
+                <!-- Security Features -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-3xl text-red-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Bảo Mật Cao</h3>
+                    <p class="text-gray-600 mb-4">
+                        Hệ thống bảo mật đa lớp với CSRF protection, session management và security headers.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>CSRF protection</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Session management</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Security headers</li>
+                    </ul>
+                </div>
+
+                <!-- Database Management -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-database text-3xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Quản Lý Database</h3>
+                    <p class="text-gray-600 mb-4">
+                        Hệ thống quản lý cơ sở dữ liệu tối ưu với schema được thiết kế chuyên nghiệp.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Schema tối ưu</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Backup tự động</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Quản lý dữ liệu hiệu quả</li>
+                    </ul>
+                </div>
+
+                <!-- Multi-platform Support -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover border border-gray-100">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-globe text-3xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Đa Nền Tảng</h3>
+                    <p class="text-gray-600 mb-4">
+                        Hỗ trợ đầy đủ các nền tảng và thiết bị với giao diện responsive.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Desktop, Tablet, Mobile</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Cross-browser support</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Responsive design</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">Về BVOTE</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        BVOTE là hệ thống bình chọn và quản lý cuộc thi trực tuyến được phát triển với công nghệ hiện đại,
+                        cung cấp giải pháp toàn diện cho các tổ chức, doanh nghiệp và cá nhân cần quản lý cuộc thi bình chọn.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Với tính năng auto login độc đáo, BVOTE giúp người dùng dễ dàng tham gia bình chọn
+                        mà không cần tạo tài khoản mới, chỉ cần sử dụng tài khoản mạng xã hội có sẵn.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                            <span class="text-gray-700">100% Tự động hóa</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                            <span class="text-gray-700">Bảo mật cao</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                            <span class="text-gray-700">Dễ sử dụng</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Thống Kê Hệ Thống</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Nền tảng hỗ trợ:</span>
+                                <span class="font-semibold text-indigo-600">8 nền tảng</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Tính năng chính:</span>
+                                <span class="font-semibold text-indigo-600">15+ tính năng</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Bảo mật:</span>
+                                <span class="font-semibold text-indigo-600">Đa lớp</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Hiệu suất:</span>
+                                <span class="font-semibold text-indigo-600">Tối ưu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Liên Hệ</h2>
+            <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+                Cần hỗ trợ hoặc có câu hỏi về hệ thống BVOTE? Hãy liên hệ với chúng tôi!
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-2xl text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Email</h3>
+                    <p class="text-gray-600">support@votingnew2025s.site</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-globe text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Website</h3>
+                    <p class="text-gray-600">votingnew2025s.site</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hỗ Trợ</h3>
+                    <p class="text-gray-600">24/7 Online Support</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-8 rounded-xl">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Truy Cập Hệ Thống</h3>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="admin/login" class="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition duration-300">
+                        <i class="fas fa-user-shield mr-2"></i>Admin Panel
+                    </a>
+                    <a href="#features" class="border-2 border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-600 hover:text-white transition duration-300">
+                        <i class="fas fa-rocket mr-2"></i>Khám phá tính năng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-indigo-400 mb-4">BVOTE</h3>
+                    <p class="text-gray-400">
+                        Hệ thống bình chọn và quản lý cuộc thi trực tuyến hàng đầu với công nghệ hiện đại.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Tính Năng</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#features" class="hover:text-white transition duration-300">Auto Login</a></li>
+                        <li><a href="#features" class="hover:text-white transition duration-300">Real-time Dashboard</a></li>
+                        <li><a href="#features" class="hover:text-white transition duration-300">Enhanced UI/UX</a></li>
+                        <li><a href="#features" class="hover:text-white transition duration-300">Security Features</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Hỗ Trợ</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#contact" class="hover:text-white transition duration-300">Liên hệ</a></li>
+                        <li><a href="admin/login" class="hover:text-white transition duration-300">Admin Panel</a></li>
+                        <li><a href="#about" class="hover:text-white transition duration-300">Giới thiệu</a></li>
+                        <li><a href="#features" class="hover:text-white transition duration-300">Tính năng</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Kết Nối</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2025 BVOTE. Tất cả quyền được bảo lưu. |
+                    <a href="admin/login" class="text-indigo-400 hover:text-indigo-300 transition duration-300">Admin Login</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Smooth Scrolling -->
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('bg-white/95', 'backdrop-blur-sm');
+            } else {
+                nav.classList.remove('bg-white/95', 'backdrop-blur-sm');
+            }
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards
+        document.querySelectorAll('.card-hover').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+    <!-- Custom CSS for animations -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .card-hover {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    </style>
+</body>
+</html>
