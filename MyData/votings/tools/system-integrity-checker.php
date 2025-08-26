@@ -85,26 +85,48 @@ class SystemIntegrityChecker {
 
         $files = $this->scanDirectory($this->projectRoot);
         $hashes = [];
+        $emptyFiles = [];
 
         foreach ($files as $file) {
             if (is_file($file)) {
-                $hash = md5_file($file);
                 $relativePath = str_replace($this->projectRoot . '/', '', $file);
+                $fileSize = filesize($file);
+                
+                // Handle empty files separately
+                if ($fileSize === 0) {
+                    $emptyFiles[] = $relativePath;
+                    continue;
+                }
+                
+                // Only check for duplicates among non-empty files
+                $hash = md5_file($file);
 
                 if (isset($hashes[$hash])) {
                     $this->duplicates[] = [
                         'original' => $hashes[$hash],
-                        'duplicate' => $relativePath
+                        'duplicate' => $relativePath,
+                        'size' => $fileSize
                     ];
-                    echo "⚠️ Duplicate found: $relativePath\n";
+                    echo "⚠️ Duplicate found: $relativePath (identical to {$hashes[$hash]})\n";
                 } else {
                     $hashes[$hash] = $relativePath;
                 }
             }
         }
 
+        // Report empty files separately
+        if (!empty($emptyFiles)) {
+            echo "\n⚠️ Empty files found (" . count($emptyFiles) . " files):\n";
+            foreach ($emptyFiles as $emptyFile) {
+                echo "  - $emptyFile\n";
+                $this->issues[] = "Empty file: $emptyFile";
+            }
+        }
+
         if (empty($this->duplicates)) {
-            echo "✅ No duplicates found\n";
+            echo "✅ No duplicate content found\n";
+        } else {
+            echo "Found " . count($this->duplicates) . " duplicate files\n";
         }
     }
 
@@ -223,16 +245,49 @@ class SystemIntegrityChecker {
             }
         }
 
+        // Tạo báo cáo tổng kết
+        $totalIssues = count($this->issues);
+        $totalDuplicates = count($this->duplicates);
+        $totalOrphans = count($this->orphanFiles);
+        
+        echo "\n📈 SUMMARY\n";
+        echo "==========\n";
+        echo "Critical Issues: $totalIssues\n";
+        echo "Duplicate Files: $totalDuplicates\n";
+        echo "Orphan Files: $totalOrphans\n";
+        
+        if ($totalIssues === 0 && $totalDuplicates === 0 && $totalOrphans === 0) {
+            echo "\n🎉 System integrity check PASSED! No issues found.\n";
+        } else {
+            echo "\n⚠️ System integrity check found issues that need attention.\n";
+        }
+
+        // Ensure logs directory exists
+        $logsDir = $this->projectRoot . '/logs';
+        if (!is_dir($logsDir)) {
+            mkdir($logsDir, 0755, true);
+        }
+
         // Tạo file báo cáo
         $report = [
             'timestamp' => date('Y-m-d H:i:s'),
+            'summary' => [
+                'critical_issues' => $totalIssues,
+                'duplicate_files' => $totalDuplicates,
+                'orphan_files' => $totalOrphans,
+                'status' => ($totalIssues === 0 && $totalDuplicates === 0 && $totalOrphans === 0) ? 'PASS' : 'FAIL'
+            ],
             'issues' => $this->issues,
             'duplicates' => $this->duplicates,
             'orphanFiles' => $this->orphanFiles
         ];
 
-        file_put_contents($this->projectRoot . '/logs/integrity-report.json', json_encode($report, JSON_PRETTY_PRINT));
-        echo "\n📝 Report saved to logs/integrity-report.json\n";
+        $reportFile = $logsDir . '/integrity-report.json';
+        if (file_put_contents($reportFile, json_encode($report, JSON_PRETTY_PRINT))) {
+            echo "\n📝 Report saved to logs/integrity-report.json\n";
+        } else {
+            echo "\n❌ Failed to save report to logs/integrity-report.json\n";
+        }
     }
 
     /**
