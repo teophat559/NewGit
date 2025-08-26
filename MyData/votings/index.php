@@ -17,8 +17,19 @@ ini_set('display_errors', 1);
 define('PROJECT_ROOT', __DIR__);
 
 // Include core bootstrap if available
+$bootstrapError = null;
 if (file_exists(__DIR__ . '/bootstrap.php')) {
-    require_once __DIR__ . '/bootstrap.php';
+    try {
+        ob_start();
+        require_once __DIR__ . '/bootstrap.php';
+        $output = ob_get_clean();
+        // If bootstrap outputs error message, capture it
+        if (!empty($output) && strpos($output, 'Composer') !== false) {
+            $bootstrapError = $output;
+        }
+    } catch (Exception $e) {
+        $bootstrapError = $e->getMessage();
+    }
 }
 
 // Simple router to handle basic requests
@@ -177,17 +188,23 @@ $path = strtok($path, '?');
         $statusMessage = 'Sistema funcionando correctamente';
         $statusClass = '';
         
+        // Check bootstrap error first
+        if ($bootstrapError) {
+            $systemStatus = 'ERROR';
+            $statusMessage = $bootstrapError;
+            $statusClass = 'error';
+        }
         // Check if core components exist
-        if (!file_exists(__DIR__ . '/bootstrap.php')) {
+        elseif (!file_exists(__DIR__ . '/bootstrap.php')) {
             $systemStatus = 'WARNING';
-            $statusMessage = 'Bootstrap no encontrado. Ejecute: composer install';
+            $statusMessage = 'Bootstrap no encontrado. Sistema en modo básico.';
             $statusClass = 'warning';
         }
-        
-        if (!is_dir(__DIR__ . '/vendor')) {
-            $systemStatus = 'ERROR';
+        // Check vendor directory
+        elseif (!is_dir(__DIR__ . '/vendor')) {
+            $systemStatus = 'WARNING'; 
             $statusMessage = 'Dependencias no instaladas. Ejecute: composer install';
-            $statusClass = 'error';
+            $statusClass = 'warning';
         }
         ?>
         

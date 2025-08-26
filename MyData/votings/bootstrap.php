@@ -22,14 +22,26 @@ if (!defined('STORAGE_PATH')) define('STORAGE_PATH', BASE_PATH . '/storage');
 if (!defined('PUBLIC_PATH')) define('PUBLIC_PATH', BASE_PATH . '/public');
 
 // Autoload Composer
+$composerAvailable = false;
 if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
     require_once BASE_PATH . '/vendor/autoload.php';
+    $composerAvailable = true;
 } else {
-    die('Composer autoload not found. Please run: composer install');
+    // Define a flag for systems that need to know composer is missing
+    define('COMPOSER_MISSING', true);
+    
+    // In web context, just return error message that can be captured
+    if (php_sapi_name() !== 'cli') {
+        echo 'Composer autoload not found. Please run: composer install';
+        return;
+    } else {
+        // In CLI context, die with error
+        die('Composer autoload not found. Please run: composer install');
+    }
 }
 
 // Load environment variables
-if (file_exists(BASE_PATH . '/.env')) {
+if ($composerAvailable && file_exists(BASE_PATH . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
     $dotenv->load();
 } else {
