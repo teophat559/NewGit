@@ -30,7 +30,7 @@ session_start();
             <h2 class="text-xl font-bold mb-4 text-yellow-400">🔒 Interface Lock Status</h2>
             <div class="test-result">
                 <?php
-                $lock_config = include('.interface_lock_config.php');
+                $lock_config = include(__DIR__ . '/../config/interface_lock_config.php');
                 echo "<div class='success'>✅ Interface Protection: " . $lock_config['protection_status'] . "</div>";
                 echo "<div class='success'>📅 Lock Date: " . $lock_config['lock_date'] . "</div>";
                 echo "<div class='warning'>⚠️  Only backend development allowed</div>";
