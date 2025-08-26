@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Error - BVOTE</title>
+    <title>Page Not Found - BVOTE</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
             color: #333;
         }
 
-        .error-container {
+        .not-found-container {
             background: white;
             border-radius: 20px;
             padding: 40px;
@@ -31,10 +31,10 @@
             width: 90%;
         }
 
-        .error-icon {
+        .not-found-icon {
             width: 80px;
             height: 80px;
-            background: #ff6b6b;
+            background: #ffa726;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -44,20 +44,20 @@
             font-size: 40px;
         }
 
-        .error-title {
+        .not-found-title {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 10px;
             color: #2c3e50;
         }
 
-        .error-message {
+        .not-found-message {
             color: #7f8c8d;
             margin-bottom: 30px;
             line-height: 1.6;
         }
 
-        .error-code {
+        .not-found-url {
             background: #f8f9fa;
             padding: 10px 20px;
             border-radius: 10px;
@@ -65,6 +65,7 @@
             color: #495057;
             margin-bottom: 30px;
             font-size: 14px;
+            word-break: break-all;
         }
 
         .action-buttons {
@@ -107,6 +108,33 @@
             transform: translateY(-2px);
         }
 
+        .search-box {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .search-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
         .footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -116,7 +144,7 @@
         }
 
         @media (max-width: 480px) {
-            .error-container {
+            .not-found-container {
                 padding: 20px;
             }
 
@@ -131,18 +159,23 @@
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-icon">⚠️</div>
+    <div class="not-found-container">
+        <div class="not-found-icon">🔍</div>
 
-        <h1 class="error-title">System Error</h1>
+        <h1 class="not-found-title">Page Not Found</h1>
 
-        <p class="error-message">
-            We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue.
+        <p class="not-found-message">
+            The page you're looking for doesn't exist or has been moved.
         </p>
 
-        <div class="error-code">
-            Error ID: <?php echo uniqid('ERR_'); ?><br>
-            Time: <?php echo date('Y-m-d H:i:s'); ?>
+        <div class="not-found-url">
+            <?php echo htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/'); ?>
+        </div>
+
+        <div class="search-box">
+            <h3>Looking for something specific?</h3>
+            <input type="text" class="search-input" placeholder="Search BVOTE..." id="searchInput">
+            <button class="search-btn" onclick="performSearch()">Search</button>
         </div>
 
         <div class="action-buttons">
@@ -152,18 +185,31 @@
 
         <div class="footer">
             <p>BVOTE Voting System</p>
-            <p>If this problem persists, please contact support</p>
+            <p>If you believe this is an error, please contact support</p>
         </div>
     </div>
 
     <script>
-        // Auto-refresh after 30 seconds
-        setTimeout(function() {
-            window.location.reload();
-        }, 30000);
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = '/search?q=' + encodeURIComponent(query);
+            }
+        }
 
-        // Log error for debugging
-        console.error('System error occurred:', {
+        // Enter key support for search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Auto-focus search input
+        document.getElementById('searchInput').focus();
+
+        // Log 404 for analytics
+        console.log('404 error occurred:', {
             url: window.location.href,
             timestamp: new Date().toISOString(),
             userAgent: navigator.userAgent

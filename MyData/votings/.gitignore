@@ -1,29 +1,37 @@
+# BVOTE Voting System - Git Ignore File
+
 # Dependencies
-/vendor/
-/node_modules/
+vendor/
+node_modules/
 
 # Environment files
 .env
 .env.local
 .env.production
+.env.staging
 
 # Logs
+logs/
+storage/logs/
 *.log
-/logs/
+*.log.*
 
 # Cache
-/cache/
-/tmp/
-/temp/
+cache/
+storage/cache/
+storage/sessions/
+storage/backups/
 
-# Uploads (if you don't want to track uploaded files)
-/uploads/
+# Uploads
+uploads/
+storage/uploads/
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS generated files
 .DS_Store
@@ -37,15 +45,15 @@ Thumbs.db
 # Backup files
 *.bak
 *.backup
-*.old
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz
 
 # Database files
-*.sql
 *.db
-
-# Configuration files with sensitive data
-config.local.php
-database.local.php
+*.sqlite
+storage/database.sqlite
 
 # Composer
 composer.phar
@@ -56,5 +64,42 @@ package-lock.json
 yarn.lock
 
 # Build files
-/dist/
-/build/
+dist/
+build/
+public/assets/
+public/build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Configuration files with secrets
+config/database.php
+config/app.php
+config/mail.php
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Testing
+phpunit.xml
+tests/coverage/
+.phpunit.result.cache
+
+# Production specific
+storage/framework/
+storage/app/public/
+bootstrap/cache/
+
+# Custom ignore patterns
+*.orig
+*.rej
+*.patch
