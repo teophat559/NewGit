@@ -1,3 +1,6 @@
+# Lưu ý: Để sử dụng APIsec scan, bạn cần cấu hình secrets 'apisec_username' và 'apisec_password' trong phần Settings → Secrets and variables → Actions của repository này.
+# Nếu chưa có, hãy đăng ký tài khoản APIsec và lấy thông tin để điền vào phần secrets này.
+
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -54,6 +57,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+       - name: Kiểm tra secrets APIsec
+         run: |
+           if [ -z "${{ secrets.apisec_username }}" ] || [ -z "${{ secrets.apisec_password }}" ]; then
+             echo "::error::Thiếu secrets 'apisec_username' hoặc 'apisec_password'. Vui lòng vào Settings → Secrets and variables → Actions để bổ sung."
+             exit 1
+           fi
        - name: APIsec scan
          uses: apisec-inc/apisec-run-scan@025432089674a28ba8fb55f8ab06c10215e772ea
          with:
@@ -66,6 +75,7 @@ jobs:
           # The name of the sarif format result file The file is written only if this property is provided.
           sarif-result-file: "apisec-results.sarif"
        - name: Import results
+         if: hashFiles('apisec-results.sarif') != ''
          uses: github/codeql-action/upload-sarif@v3
          with:
           sarif_file: ./apisec-results.sarif
