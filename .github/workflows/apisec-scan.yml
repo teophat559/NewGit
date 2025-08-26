@@ -1,3 +1,14 @@
+# Lưu ý: Để sử dụng APIsec scan, bạn cần cấu hình secrets 'apisec_username' và 'apisec_password' trong phần Settings → Secrets and variables → Actions của repository này.
+# Nếu chưa có, hãy đăng ký tài khoản APIsec và lấy thông tin để điền vào phần secrets này.
+# 
+# Hướng dẫn chi tiết:
+# 1. Truy cập https://cloud.apisec.ai/#/signup để đăng ký tài khoản APIsec
+# 2. Sau khi đăng ký, lấy thông tin username và password
+# 3. Vào repository này → Settings → Secrets and variables → Actions
+# 4. Thêm hai secrets mới:
+#    - Name: apisec_username, Value: [your APIsec username]
+#    - Name: apisec_password, Value: [your APIsec password]
+#
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -54,9 +65,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       - name: APIsec scan
-         uses: apisec-inc/apisec-run-scan@025432089674a28ba8fb55f8ab06c10215e772ea
-         with:
+      - name: Kiểm tra secrets cần thiết
+        run: |
+          if [ -z "${{ secrets.apisec_username }}" ] || [ -z "${{ secrets.apisec_password }}" ]; then
+            echo "❌ THIẾU SECRETS CẦN THIẾT!"
+            echo "Vui lòng cấu hình secrets 'apisec_username' và 'apisec_password' trong Settings → Secrets and variables → Actions"
+            echo "Hướng dẫn:"
+            echo "1. Truy cập https://cloud.apisec.ai/#/signup để đăng ký tài khoản APIsec (nếu chưa có)"
+            echo "2. Lấy thông tin username và password từ tài khoản APIsec"
+            echo "3. Vào repository → Settings → Secrets and variables → Actions"
+            echo "4. Thêm secrets: apisec_username và apisec_password"
+            exit 1
+          else
+            echo "✅ Secrets đã được cấu hình đúng"
+          fi
+      - name: APIsec scan
+        uses: apisec-inc/apisec-run-scan@025432089674a28ba8fb55f8ab06c10215e772ea
+        with:
           # The APIsec username with which the scans will be executed
           apisec-username: ${{ secrets.apisec_username }}
           # The Password of the APIsec user with which the scans will be executed
@@ -65,7 +90,7 @@ jobs:
           apisec-project: "VAmPI"
           # The name of the sarif format result file The file is written only if this property is provided.
           sarif-result-file: "apisec-results.sarif"
-       - name: Import results
-         uses: github/codeql-action/upload-sarif@v3
-         with:
+      - name: Import results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
           sarif_file: ./apisec-results.sarif
